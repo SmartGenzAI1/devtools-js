@@ -6,17 +6,36 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./cli": "./cli.js"
+  },
+  "bin": {
+    "devtools-js": "./cli.js"
   },
   "sideEffects": false,
-  "files": ["dist"],
+  "files": [
+    "dist",
+    "cli.js"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w"
   },
-  "keywords": ["utils", "helpers", "node", "developer-tools", "devtools"],
+  "keywords": [
+    "utils",
+    "helpers",
+    "node",
+    "developer-tools",
+    "devtools"
+  ],
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^25.0.10",
     "typescript": "^5.6.0"
+  },
+  "dependencies": {
+    "@types/chalk": "^0.4.31",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.2"
   }
 }
