@@ -1,3 +1,5 @@
+import { logger } from '../index.js';
+
 /**
  * Create deep copy of object to avoid reference issues.
  * Uses structuredClone for reliable deep cloning of complex objects.
@@ -905,15 +907,15 @@ export function createProxy<T extends Record<string, any>>(
 ): T {
   const defaultHandlers = {
     get(target: T, prop: string, receiver: any) {
-      console.log(`Getting property: ${prop}`);
+      logger.debug(`Getting property: ${prop}`);
       return Reflect.get(target, prop, receiver);
     },
     set(target: T, prop: string, value: any, receiver: any) {
-      console.log(`Setting property: ${prop} = ${value}`);
+      logger.debug(`Setting property: ${prop} = ${value}`);
       return Reflect.set(target, prop, value, receiver);
     },
     deleteProperty(target: T, prop: string) {
-      console.log(`Deleting property: ${prop}`);
+      logger.debug(`Deleting property: ${prop}`);
       return Reflect.deleteProperty(target, prop);
     },
     ...handlers
