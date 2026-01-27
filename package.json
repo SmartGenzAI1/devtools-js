@@ -1,6 +1,6 @@
 {
-  "name": "devtools-js",
-  "version": "1.0.0",
+  "name": "@saffan/devtools-js",
+  "version": "1.0.1",
   "description": "Tiny zero-dependency powerful utilities for Node.js developers",
   "type": "module",
   "main": "./dist/index.js",

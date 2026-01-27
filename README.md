@@ -1,11 +1,11 @@
-# ⚡ devtools-js
+# ⚡ @saffan/devtools-js
 
 **Tiny zero-dependency utility toolkit for Node.js developers. Stop rewriting the same helpers.**
 
-[![npm version](https://img.shields.io/npm/v/devtools-js.svg)](https://www.npmjs.com/package/devtools-js)
-[![npm downloads](https://img.shields.io/npm/dm/devtools-js.svg)](https://www.npmjs.com/package/devtools-js)
-[![License](https://img.shields.io/npm/l/devtools-js.svg)](https://github.com/SmartGenzAI1/devtools-js/blob/main/LICENSE)
-[![Size](https://img.shields.io/bundlephobia/min/devtools-js)](https://bundlephobia.com/result?p=devtools-js)
+[![npm version](https://img.shields.io/npm/v/@saffan/devtools-js.svg)](https://www.npmjs.com/package/@saffan/devtools-js)
+[![npm downloads](https://img.shields.io/npm/dm/@saffan/devtools-js.svg)](https://www.npmjs.com/package/@saffan/devtools-js)
+[![License](https://img.shields.io/npm/l/@saffan/devtools-js.svg)](https://github.com/SmartGenzAI1/devtools-js/blob/main/LICENSE)
+[![Size](https://img.shields.io/bundlephobia/min/@saffan/devtools-js)](https://bundlephobia.com/result?p=@saffan/devtools-js)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
 [![GitHub Stars](https://img.shields.io/github/stars/SmartGenzAI1/devtools-js.svg?style=social)](https://github.com/SmartGenzAI1/devtools-js)
 [![Maintained](https://img.shields.io/maintenance/yes/2024.svg)](https://github.com/SmartGenzAI1/devtools-js)
@@ -15,7 +15,9 @@
 
 ## 🚀 All-in-one Node developer toolkit
 
-**devtools-js** provides everything Node.js developers need daily in a single, tiny, zero-dependency package.
+**@saffan/devtools-js** provides everything Node.js developers need daily in a single, tiny, zero-dependency package.
+
+[![Back to Top](https://img.shields.io/badge/↑_Back_to_Top-↑-blue)](#-saffandevtools-js)
 
 ## ✨ Features
 
@@ -29,11 +31,11 @@
 ## 📦 Installation
 
 ```bash
-npm install devtools-js
+npm install @saffan/devtools-js
 # or
-yarn add devtools-js
+yarn add @saffan/devtools-js
 # or
-pnpm add devtools-js
+pnpm add @saffan/devtools-js
 ```
 
 ## 🔧 Usage
@@ -46,7 +48,7 @@ import {
   timer, safeTry, asyncQueue,
   debounce, throttle, hash,
   randomString, bytes, deepClone, isEmpty
-} from 'devtools-js';
+} from '@saffan/devtools-js';
 ```
 
 ## 📚 Core Features
@@ -186,16 +188,16 @@ await sleep(1000); // Wait 1 second
 
 ```bash
 # Generate UUID
-npx devtools-js uuid
+npx @saffan/devtools-js uuid
 
 # Hash text
-npx devtools-js hash "hello world"
+npx @saffan/devtools-js hash "hello world"
 
 # Generate random string
-npx devtools-js random 16
+npx @saffan/devtools-js random 16
 
 # Show library info
-npx devtools-js info
+npx @saffan/devtools-js info
 ```
 
 ## 📊 Performance Benchmarks
@@ -414,7 +416,7 @@ sequenceDiagram
 | **Color** | `randomHexColor`, `rgbToHex`, `hexToRgb` | Color manipulation |
 | **Query** | `toQueryString`, `fromQueryString` | Query string conversion |
 
-## 🎯 Why devtools-js?
+## 🎯 Why @saffan/devtools-js?
 
 1. **Comprehensive** - 30+ utilities covering all common needs
 2. **Zero dependencies** - Only uses Node.js built-ins (except chalk/commander for CLI)
@@ -490,7 +492,7 @@ npm test
 
 ## ⭐ Support
 
-**Love devtools-js? Here's how you can support the project:**
+**Love @saffan/devtools-js? Here's how you can support the project:**
 
 - **⭐ Star the Repo** - Give us a star on GitHub
 - **🐦 Share on Twitter** - Tell your followers about it
@@ -506,15 +508,15 @@ npm test
 gh repo star SmartGenzAI1/devtools-js
 
 # Share on Twitter
-tweet "Just discovered @devtools_js - an amazing utility library for Node.js! 🚀 #NodeJS #JavaScript"
+tweet "Just discovered @saffan/devtools-js - an amazing utility library for Node.js! 🚀 #NodeJS #JavaScript"
 
 # Use in your projects
-npm install devtools-js
+npm install @saffan/devtools-js
 ```
 
 ## 📈 View Counter
 
-[![Visitor Count](https://komarev.com/ghpvc/?username=SmartGenzAI1&label=devtools-js%20Views&color=blue&style=flat)](https://github.com/SmartGenzAI1/devtools-js)
+[![Visitor Count](https://komarev.com/ghpvc/?username=SmartGenzAI1&label=@saffan/devtools-js%20Views&color=blue&style=flat)](https://github.com/SmartGenzAI1/devtools-js)
 
 **Thank you for visiting!** 🎉 Every view helps us understand what developers need.
 
@@ -524,9 +526,9 @@ MIT © [SmartGenzAI1](https://github.com/SmartGenzAI1)
 
 ---
 
-**⚡ devtools-js - The Swiss Army Knife for Node.js developers!**
+**⚡ @saffan/devtools-js - The Swiss Army Knife for Node.js developers!**
 
-## 🎯 Why devtools-js?
+## 🎯 Why @saffan/devtools-js?
 
 1. **Stop rewriting utilities** - Every project needs these helpers
 2. **Zero dependencies** - No bloat, just pure Node.js
@@ -566,7 +568,7 @@ If this saves you time, please:
 
 ---
 
-**⚡ devtools-js - Tiny zero-dependency utility toolkit for Node.js developers. Stop rewriting the same helpers.**
+**⚡ @saffan/devtools-js - Tiny zero-dependency utility toolkit for Node.js developers. Stop rewriting the same helpers.**
 
 **🔥 Powerful. Feature-rich. Very useful. The Swiss Army Knife for Node.js!**
 
@@ -574,10 +576,10 @@ If this saves you time, please:
 
 **🌟 Star us on GitHub: [SmartGenzAI1/devtools-js](https://github.com/SmartGenzAI1/devtools-js)**
 
-**📦 Install now: `npm install devtools-js`**
+**📦 Install now: `npm install @saffan/devtools-js`**
 
 ---
 
 **Made with ❤️ by SmartGenzAI1 | Powered by AI | Open Source**
 
-[![Back to Top](https://img.shields.io/badge/↑_Back_to_Top-↑-blue)](#devtools-js)
+[![Back to Top](https://img.shields.io/badge/↑_Back_to_Top-↑-blue)](#-saffandevtools-js)
