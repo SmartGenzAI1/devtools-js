@@ -425,6 +425,16 @@ sequenceDiagram
 7. **Scalable** - Clean architecture with separate concerns
 8. **Maintainable** - Follows best practices and coding standards
 
+## 📊 Project Statistics
+
+[![GitHub Stars](https://img.shields.io/github/stars/SmartGenzAI1/devtools-js?style=social)](https://github.com/SmartGenzAI1/devtools-js/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/SmartGenzAI1/devtools-js?style=social)](https://github.com/SmartGenzAI1/devtools-js/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/SmartGenzAI1/devtools-js)](https://github.com/SmartGenzAI1/devtools-js/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SmartGenzAI1/devtools-js)](https://github.com/SmartGenzAI1/devtools-js/pulls)
+
+[![GitHub Activity](https://img.shields.io/github/commit-activity/m/SmartGenzAI1/devtools-js)](https://github.com/SmartGenzAI1/devtools-js/graphs/commit-activity)
+[![Last Commit](https://img.shields.io/github/last-commit/SmartGenzAI1/devtools-js)](https://github.com/SmartGenzAI1/devtools-js/commits/main)
+
 ## 🤝 Contributing
 
 **Contributions welcome!** This is an open-source project and we appreciate your help!
@@ -465,7 +475,7 @@ npm run build
 # Watch for changes
 npm run dev
 
-# Run tests (coming soon)
+# Run tests
 npm test
 ```
 
@@ -502,9 +512,15 @@ tweet "Just discovered @devtools_js - an amazing utility library for Node.js! �
 npm install devtools-js
 ```
 
+## 📈 View Counter
+
+[![Visitor Count](https://komarev.com/ghpvc/?username=SmartGenzAI1&label=devtools-js%20Views&color=blue&style=flat)](https://github.com/SmartGenzAI1/devtools-js)
+
+**Thank you for visiting!** 🎉 Every view helps us understand what developers need.
+
 ## 📄 License
 
-MIT © [Your Name](https://github.com/yourusername)
+MIT © [SmartGenzAI1](https://github.com/SmartGenzAI1)
 
 ---
 
@@ -528,7 +544,7 @@ Contributions welcome! Open issues and PRs for:
 - Documentation improvements
 
 ```bash
-git clone https://github.com/yourusername/devtools-js.git
+git clone https://github.com/SmartGenzAI1/devtools-js.git
 cd devtools-js
 npm install
 npm run build
@@ -563,3 +579,5 @@ If this saves you time, please:
 ---
 
 **Made with ❤️ by SmartGenzAI1 | Powered by AI | Open Source**
+
+[![Back to Top](https://img.shields.io/badge/↑_Back_to_Top-↑-blue)](#devtools-js)

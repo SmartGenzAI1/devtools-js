@@ -89,20 +89,49 @@ export async function retry<T>(
 export const uuid = () => crypto.randomUUID();
 
 /**
- * Colored logger with timestamp and emoji icons.
- * Perfect for debugging, monitoring, and production logging.
+ * Professional logging system with structured output.
+ * Provides consistent, timestamped logging for development and production.
  */
-const t = () => new Date().toISOString();
+const getTimestamp = (): string => {
+  const now = new Date();
+  return now.toISOString();
+};
+
+const formatMessage = (level: string, ...args: any[]): string => {
+  const timestamp = getTimestamp();
+  const message = args.map(arg => 
+    typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+  ).join(' ');
+  return `[${timestamp}] ${level}: ${message}`;
+};
 
 export const logger = {
-  /** Log informational messages (green) */
-  info: (...m: any[]) => console.log(chalk.green(t(), "ℹ️", ...m)),
-  /** Log success messages (cyan) */
-  success: (...m: any[]) => console.log(chalk.cyan(t(), "✅", ...m)),
-  /** Log warning messages (yellow) */
-  warn: (...m: any[]) => console.warn(chalk.yellow(t(), "⚠️", ...m)),
-  /** Log error messages (red) */
-  error: (...m: any[]) => console.error(chalk.red(t(), "❌", ...m))
+  /** Log informational messages */
+  info: (...args: any[]): void => {
+    console.log(chalk.blue(formatMessage('INFO', ...args)));
+  },
+  
+  /** Log success messages */
+  success: (...args: any[]): void => {
+    console.log(chalk.green(formatMessage('SUCCESS', ...args)));
+  },
+  
+  /** Log warning messages */
+  warn: (...args: any[]): void => {
+    console.warn(chalk.yellow(formatMessage('WARN', ...args)));
+  },
+  
+  /** Log error messages */
+  error: (...args: any[]): void => {
+    console.error(chalk.red(formatMessage('ERROR', ...args)));
+  },
+  
+  /** Log debug messages (only in development) */
+  debug: (...args: any[]): void => {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(chalk.gray(formatMessage('DEBUG', ...args)));
+    }
+  }
 };
 
 /**
@@ -425,32 +454,83 @@ export const env = {
 };
 
 /**
- * Format errors for better readability.
- * Adds emoji and stack trace for Error objects, uses util.inspect for others.
+ * Format errors for better debugging and logging.
+ * Provides structured error information for troubleshooting.
  *
  * @param error - Error to format
+ * @param context - Optional context information
  * @returns Formatted error string
  */
-export function prettyError(error: unknown): string {
+export function formatError(error: unknown, context?: string): string {
   if (error instanceof Error) {
-    return `💥 ${error.name}: ${error.message}\n${error.stack}`;
+    const errorInfo = {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      context: context || 'No context provided',
+      timestamp: new Date().toISOString()
+    };
+    
+    return chalk.red.bold(`ERROR: ${error.name}\n`) +
+           chalk.red(`Message: ${error.message}\n`) +
+           chalk.yellow(`Context: ${errorInfo.context}\n`) +
+           chalk.gray(`Time: ${errorInfo.timestamp}\n`) +
+           chalk.gray(`Stack: ${error.stack}`);
   }
-  return util.inspect(error, { depth: null, colors: true });
+  
+  return chalk.red(`Unknown error: ${util.inspect(error, { depth: null })}`);
 }
 
 /**
- * Group related log messages together.
- * Creates collapsible group in console for better organization.
+ * Execute function with performance timing and error handling.
+ * Provides structured execution context for better debugging.
  *
- * @param label - Group label
- * @param fn - Function to execute within group
+ * @param label - Operation label for logging
+ * @param fn - Function to execute
+ * @returns Promise with result and execution time
  */
-export function group(label: string, fn: () => void) {
-  console.group(`📁 ${label}`);
+export async function executeWithTiming<T>(
+  label: string, 
+  fn: () => Promise<T>
+): Promise<{ result: T; duration: number }> {
+  const startTime = Date.now();
+  logger.info(`Starting: ${label}`);
+  
   try {
-    fn();
-  } finally {
-    console.groupEnd();
+    const result = await fn();
+    const duration = Date.now() - startTime;
+    logger.success(`Completed: ${label} (${duration}ms)`);
+    return { result, duration };
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    logger.error(`Failed: ${label} (${duration}ms)`, formatError(error, label));
+    throw error;
+  }
+}
+
+/**
+ * Execute synchronous function with timing and error handling.
+ *
+ * @param label - Operation label for logging
+ * @param fn - Function to execute
+ * @returns Result and execution time
+ */
+export function executeSyncWithTiming<T>(
+  label: string, 
+  fn: () => T
+): { result: T; duration: number } {
+  const startTime = Date.now();
+  logger.info(`Starting: ${label}`);
+  
+  try {
+    const result = fn();
+    const duration = Date.now() - startTime;
+    logger.success(`Completed: ${label} (${duration}ms)`);
+    return { result, duration };
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    logger.error(`Failed: ${label} (${duration}ms)`, formatError(error, label));
+    throw error;
   }
 }
 
@@ -847,22 +927,48 @@ export function deepEqual(a: any, b: any): boolean {
 }
 
 /**
- * Create a memoized version of a function.
+ * Create a memoized version of a function with cache management.
  * Useful for performance optimization, caching, or expensive computations.
  *
  * @param fn - Function to memoize
- * @returns Memoized function
+ * @param options - Cache configuration options
+ * @returns Memoized function with cache management
  */
-export function memoize<T extends (...args: any[]) => any>(fn: T): T {
-  const cache = new Map<string, any>();
+export function memoize<T extends (...args: any[]) => any>(
+  fn: T,
+  options?: {
+    maxSize?: number;
+    ttl?: number; // Time to live in milliseconds
+    keyGenerator?: (...args: Parameters<T>) => string;
+  }
+): T {
+  const { maxSize = Infinity, ttl = Infinity, keyGenerator = (args: Parameters<T>) => JSON.stringify(args) } = options || {};
+  const cache = new Map<string, { value: any; timestamp: number }>();
 
   return ((...args: Parameters<T>): ReturnType<T> => {
-    const key = JSON.stringify(args);
+    const key = keyGenerator(args);
+    const now = Date.now();
+
+    // Check if cached value exists and is still valid
     if (cache.has(key)) {
-      return cache.get(key);
+      const cached = cache.get(key)!;
+      if (now - cached.timestamp < ttl) {
+        return cached.value;
+      }
+      cache.delete(key);
     }
+
+    // Clean up cache if it exceeds max size
+    if (cache.size >= maxSize) {
+      const oldestKey = cache.keys().next().value;
+      if (oldestKey !== undefined) {
+        cache.delete(oldestKey);
+      }
+    }
+
+    // Execute function and cache result
     const result = fn(...args);
-    cache.set(key, result);
+    cache.set(key, { value: result, timestamp: now });
     return result;
   }) as T;
 }
@@ -875,35 +981,58 @@ export function memoize<T extends (...args: any[]) => any>(fn: T): T {
  * @returns Function that can only be called once
  */
 export function once<T extends (...args: any[]) => any>(fn: T): T {
-  let called = false;
-  let result: any;
+  let hasExecuted = false;
+  let cachedResult: any;
 
   return ((...args: Parameters<T>): ReturnType<T> => {
-    if (!called) {
-      called = true;
-      result = fn(...args);
+    if (hasExecuted) {
+      return cachedResult;
     }
-    return result;
+    
+    hasExecuted = true;
+    cachedResult = fn(...args);
+    return cachedResult;
   }) as T;
 }
 
 /**
- * Create a function that can only be called a limited number of times.
+ * Create a function with call count limiting and monitoring.
  * Useful for rate limiting, API calls, or resource management.
  *
  * @param fn - Function to limit
  * @param limit - Maximum number of calls
- * @returns Limited function
+ * @param options - Optional configuration
+ * @returns Limited function with monitoring
  */
-export function limitCalls<T extends (...args: any[]) => any>(fn: T, limit: number): T {
-  let count = 0;
+export function limitCalls<T extends (...args: any[]) => any>(
+  fn: T, 
+  limit: number,
+  options?: { warnThreshold?: number; resetAfter?: number }
+): T {
+  let callCount = 0;
+  let lastResetTime = Date.now();
+
+  const { warnThreshold = Math.floor(limit * 0.8), resetAfter } = options || {};
 
   return ((...args: Parameters<T>): ReturnType<T> | null => {
-    if (count >= limit) {
-      logger.warn(`Function call limit (${limit}) exceeded`);
+    const now = Date.now();
+    
+    // Auto-reset if resetAfter is configured
+    if (resetAfter && (now - lastResetTime) > resetAfter) {
+      callCount = 0;
+      lastResetTime = now;
+    }
+
+    if (callCount >= limit) {
+      logger.warn(`Call limit exceeded: ${limit} calls for function`);
       return null as any;
     }
-    count++;
+
+    if (callCount >= warnThreshold) {
+      logger.warn(`Call threshold approaching: ${callCount}/${limit}`);
+    }
+
+    callCount++;
     return fn(...args);
   }) as T;
 }
