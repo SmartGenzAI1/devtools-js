@@ -1,0 +1,22 @@
+{
+  "name": "devtools-js",
+  "version": "1.0.0",
+  "description": "Tiny zero-dependency powerful utilities for Node.js developers",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "sideEffects": false,
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "keywords": ["utils", "helpers", "node", "developer-tools", "devtools"],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
