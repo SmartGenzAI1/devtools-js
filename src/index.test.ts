@@ -321,16 +321,22 @@ describe('Logger', () => {
   });
 
   it('should log messages with different levels', () => {
+    // Mock process.stdout.write and process.stderr.write to track calls
+    const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+    const stderrSpy = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+
     logger.info('info message');
     logger.error('error message');
     logger.warn('warning message');
     logger.success('success message');
 
-    // Note: console.log is now replaced with logger functions in production code
-    // This test was checking for console.log calls which are no longer present
-    expect(true).toBe(true); // Placeholder assertion
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.warn).toHaveBeenCalledTimes(1);
+    // Verify that our logger functions are working (they use process.stdout.write/process.stderr.write)
+    expect(stdoutSpy).toHaveBeenCalled();
+    expect(stderrSpy).toHaveBeenCalled();
+
+    // Clean up mocks
+    stdoutSpy.mockRestore();
+    stderrSpy.mockRestore();
   });
 });
 
