@@ -102,7 +102,7 @@ export const isUrl = (val: any): val is string =>
  * Useful for form validation and data validation.
  */
 export const isPhone = (val: any): val is string =>
-  isString(val) && /^\+?[\d\s\-\(\)]{10,}$/.test(val);
+  isString(val) && /^[+?\d\s()-]{10,}$/.test(val);
 
 /**
  * Check if value is a valid credit card number.

@@ -1304,4 +1304,372 @@ export function circuitBreaker<T extends (...args: any[]) => Promise<any>>(
       }
     });
   });
+}  
+// ==================== ARRAY UTILITIES ====================  
+ 
+
+/**
+ * Split an array into chunks of specified size.
+ * Useful for pagination, batch processing, or splitting large datasets.
+ */
+export function chunk<T>(array: T[], size: number): T[][] {
+  if (!Array.isArray(array) || size <= 0) return [];
+  const result: T[][] = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+}
+
+/**
+ * Flatten array with optional depth.
+ */
+export function flatten<T>(array: T[], depth: number = Infinity): T[] {
+  if (!Array.isArray(array)) return [];
+  const result: T[] = [];
+  for (const item of array) {
+    if (Array.isArray(item) && depth > 0) {
+      result.push(...flatten(item, depth - 1));
+    } else {
+      result.push(item);
+    }
+  }
+  return result;
+}
+
+/**
+ * Remove duplicate values from array.
+ */
+export function unique<T>(array: T[]): T[] {
+  if (!Array.isArray(array)) return [];
+  return [...new Set(array)];
+}
+
+/**
+ * Group array elements by key or function result.
+ */
+export function groupBy<T>(
+  array: T[],
+  iteratee: ((item: T) => any) | string
+): Record<string, T[]> {
+  if (!Array.isArray(array)) return {};
+  const result: Record<string, T[]> = {};
+  const getKey = typeof iteratee === 'function' ? iteratee : (item: T) => String((item as any)[iteratee]);
+  
+  for (const item of array) {
+    const key = getKey(item);
+    if (!result[key]) result[key] = [];
+    result[key].push(item);
+  }
+  return result;
+}
+
+/**
+ * Split array into two groups based on predicate.
+ */
+export function partition<T>(
+  array: T[],
+  predicate: (item: T) => boolean
+): [T[], T[]] {
+  if (!Array.isArray(array)) return [[], []];
+  const matching: T[] = [];
+  const nonMatching: T[] = [];
+  for (const item of array) {
+    if (predicate(item)) matching.push(item);
+    else nonMatching.push(item);
+  }
+  return [matching, nonMatching];
+}
+
+/**
+ * Combine arrays element-wise into tuples.
+ */
+export function zip<T>(...arrays: T[][]): T[][] {
+  if (arrays.length === 0) return [];
+  const length = Math.min(...arrays.map(arr => arr.length));
+  const result: T[][] = [];
+  for (let i = 0; i < length; i++) {
+    result.push(arrays.map(arr => arr[i]));
+  }
+  return result;
+}
+
+/**
+ * Split array of tuples into separate arrays.
+ */
+export function unzip<T>(arrays: T[][]): T[][] {
+  if (!Array.isArray(arrays) || arrays.length === 0) return [];
+  const length = arrays[0].length;
+  const result: T[][] = Array.from({ length }, () => []);
+  for (const tuple of arrays) {
+    for (let i = 0; i < tuple.length; i++) {
+      result[i].push(tuple[i]);
+    }
+  }
+  return result;
+}
+
+/**
+ * Find common elements across all arrays.
+ */
+export function intersection<T>(...arrays: T[][]): T[] {
+  if (arrays.length === 0) return [];
+  const first = arrays[0];
+  const rest = arrays.slice(1);
+  return first.filter(item => rest.every(arr => arr.includes(item)));
+}
+
+/**
+ * Find elements in first array not present in others.
+ */
+export function difference<T>(array: T[], ...others: T[][]): T[] {
+  if (!Array.isArray(array)) return [];
+  const excludeSet = new Set(others.flat());
+  return array.filter(item => !excludeSet.has(item));
+}
+
+/**
+ * Combine unique elements from all arrays.
+ */
+export function union<T>(...arrays: T[][]): T[] {
+  return [...new Set(arrays.flat())];
+}
+
+/**
+ * Sort array by property or function result.
+ */
+export function sortBy<T>(
+  array: T[],
+  iteratee: ((item: T) => any) | string
+): T[] {
+  if (!Array.isArray(array)) return [];
+  const getValue = typeof iteratee === 'function' ? iteratee : (item: T) => (item as any)[iteratee];
+  return [...array].sort((a, b) => {
+    const valA = getValue(a);
+    const valB = getValue(b);
+    if (valA < valB) return -1;
+    if (valA > valB) return 1;
+    return 0;
+  });
+}
+
+/**
+ * Reverse array (immutable).
+ */
+export function reverse<T>(array: T[]): T[] {
+  if (!Array.isArray(array)) return [];
+  return [...array].reverse();
+}
+
+/**
+ * Remove falsy values except 0.
+ */
+export function compact<T>(array: T[]): T[] {
+  if (!Array.isArray(array)) return [];
+  return array.filter(item => item !== null && item !== false && item !== '' && item !== undefined && item !== 0 ? true : Number.isNaN(item) ? false : true);
+}
+
+/**
+ * Remove null and undefined values.
+ */
+export function filterNil<T>(array: T[]): NonNullable<T>[] {
+  if (!Array.isArray(array)) return [];
+  return array.filter((item): item is NonNullable<T> => item != null) as NonNullable<T>[];
+}
+
+/**
+ * Remove first n elements from array.
+ */
+export function drop<T>(array: T[], n: number = 1): T[] {
+  if (!Array.isArray(array)) return [];
+  return array.slice(n);
+}
+
+/**
+ * Get first n elements from array.
+ */
+export function take<T>(array: T[], n: number = 1): T[] {
+  if (!Array.isArray(array)) return [];
+  return array.slice(0, n);
+}
+
+/**
+ * Slice array after condition is met.
+ */
+export function sliceAfter<T>(array: T[], predicate: (item: T) => boolean): T[] {
+  if (!Array.isArray(array)) return [];
+  const index = array.findIndex(predicate);
+  return index === -1 ? [] : array.slice(index + 1);
+}
+
+/**
+ * Slice array before condition is met.
+ */
+export function sliceBefore<T>(array: T[], predicate: (item: T) => boolean): T[] {
+  if (!Array.isArray(array)) return [];
+  const index = array.findIndex(predicate);
+  return index === -1 ? array : array.slice(0, index);
+}
+
+/**
+ * Find last matching element in array.
+ */
+export function findLast<T>(
+  array: T[],
+  predicate: (item: T) => boolean
+): T | undefined {
+  if (!Array.isArray(array)) return undefined;
+  for (let i = array.length - 1; i >= 0; i--) {
+    if (predicate(array[i])) return array[i];
+  }
+  return undefined;
+}
+
+/**
+ * Find last matching index in array.
+ */
+export function findIndexLast<T>(
+  array: T[],
+  predicate: (item: T) => boolean
+): number {
+  if (!Array.isArray(array)) return -1;
+  for (let i = array.length - 1; i >= 0; i--) {
+    if (predicate(array[i])) return i;
+  }
+  return -1;
+}
+
+/**
+ * Check if array includes value.
+ */
+export function arrayIncludes<T>(array: T[], value: T): boolean {
+  if (!Array.isArray(array)) return false;
+  return array.includes(value);
+}
+
+/**
+ * Find all indices of value in array.
+ */
+export function indexOfAll<T>(array: T[], value: T): number[] {
+  if (!Array.isArray(array)) return [];
+  const indices: number[] = [];
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] === value) indices.push(i);
+  }
+  return indices;
+}
+
+/**
+ * Map array with access to value and index.
+ */
+export function mapValues<T, U>(
+  array: T[],
+  iteratee: (value: T, index: number) => U
+): U[] {
+  if (!Array.isArray(array)) return [];
+  return array.map(iteratee);
+}
+
+/**
+ * Flatten array after mapping.
+ */
+export function arrayFlatMap<T, U>(
+  array: T[],
+  iteratee: (value: T, index: number) => U[]
+): U[] {
+  if (!Array.isArray(array)) return [];
+  return array.flatMap(iteratee);
+}
+
+/**
+ * Reduce array from right to left.
+ */
+export function reduceRight<T, U>(
+  array: T[],
+  reducer: (accumulator: U, current: T, index: number) => U,
+  initial: U
+): U {
+  if (!Array.isArray(array)) return initial;
+  let result = initial;
+  for (let i = array.length - 1; i >= 0; i--) {
+    result = reducer(result, array[i], i);
+  }
+  return result;
+}
+
+/**
+ * Zip arrays with custom combine function.
+ */
+export function zipWith<T, U>(
+  arrays: T[][],
+  iteratee: (...values: T[]) => U
+): U[] {
+  if (arrays.length === 0) return [];
+  const length = Math.min(...arrays.map(arr => arr.length));
+  const result: U[] = [];
+  for (let i = 0; i < length; i++) {
+    result.push(iteratee(...arrays.map(arr => arr[i])));
+  }
+  return result;
+}
+
+/**
+ * Calculate sum of numbers in array.
+ */
+export function arraySum(array: number[]): number {
+  if (!Array.isArray(array)) return 0;
+  return array.reduce((acc, val) => acc + val, 0);
+}
+
+/**
+ * Calculate average of numbers in array.
+ */
+export function mean(array: number[]): number {
+  if (!Array.isArray(array) || array.length === 0) return 0;
+  return array.reduce((acc, val) => acc + val, 0) / array.length;
+}
+
+/**
+ * Find minimum value in array.
+ */
+export function arrayMin<T extends number | string>(array: T[]): T | undefined {
+  if (!Array.isArray(array) || array.length === 0) return undefined;
+  return array.reduce((min, val) => val < min ? val : min);
+}
+
+/**
+ * Find maximum value in array.
+ */
+export function arrayMax<T extends number | string>(array: T[]): T | undefined {
+  if (!Array.isArray(array) || array.length === 0) return undefined;
+  return array.reduce((max, val) => val > max ? val : max);
+}
+
+/**
+ * Repeat value specified number of times.
+ */
+export function repeat<T>(value: T, times: number): T[] {
+  if (times <= 0) return [];
+  return Array.from({ length: times }, () => value);
+}
+
+/**
+ * Check if array is empty.
+ */
+export function isEmptyArray(array: any[]): boolean {
+  return !Array.isArray(array) || array.length === 0;
+}
+
+/**
+ * Get array length (safe for non-arrays).
+ */
+export function arraySize(array: any[]): number {
+  return Array.isArray(array) ? array.length : 0;
+}
+
+/**
+ * Type guard to check if value is an array.
+ */
+export function isArray(value: any): value is any[] {
+  return Array.isArray(value);
 }

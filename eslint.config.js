@@ -37,7 +37,8 @@ export default [
       'no-async-promise-executor': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
-      'no-redeclare': 'off'
+      'no-redeclare': 'off',
+      'no-useless-escape': 'off'
     }
   },
   {
@@ -47,12 +48,15 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        vi: 'readonly',
+        jest: 'readonly',
         describe: 'readonly',
         it: 'readonly',
+        test: 'readonly',
         expect: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
         console: 'readonly',
         process: 'readonly',
         setTimeout: 'readonly',
